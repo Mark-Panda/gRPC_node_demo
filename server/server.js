@@ -15,13 +15,15 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 const allPackage = grpc.loadPackageDefinition(packageDefinition).userService;
 
 const cacert = fs.readFileSync(__dirname + "/../Keys/ca.crt");
-const cert = fs.readFileSync(__dirname + "/../Keys/client.crt");
-const key = fs.readFileSync(__dirname + "/../Keys/client.key");
+const cert = fs.readFileSync(__dirname + "/../Keys/server.crt");
+const key = fs.readFileSync(__dirname + "/../Keys/server.key");
 const kvpair = {
     private_key: key,
     cert_chain: cert,
 };
 
+// SSL安全传输
+const credentials = grpc.ServerCredentials.createSsl(cacert, [kvpair], true);
 /**
  * Starts an RPC server that receives requests for the Greeter service at the
  * sample server port
@@ -38,6 +40,7 @@ function main() {
     });
     server.bindAsync(
         "0.0.0.0:50051",
+        // credentials, //SSL安全传输
         grpc.ServerCredentials.createInsecure(),
         () => {
             server.start();

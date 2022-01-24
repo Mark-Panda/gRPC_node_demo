@@ -6,7 +6,6 @@ module.exports = {
         const md = new grpc.Metadata();
         md.add("username", "Alexis");
         md.add("password", "12345");
-
         client.getByUserId({ userId: 1 }, md, function(err, response) {
             if (err) console.log(err);
             else console.log(response.user);
@@ -14,7 +13,6 @@ module.exports = {
     },
     getAll: function(client) {
         const call = client.getAll({});
-
         call.on("data", function(data) {
             console.log(data.user);
         });
